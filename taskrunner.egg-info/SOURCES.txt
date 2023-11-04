@@ -1,0 +1,12 @@
+pyproject.toml
+TaskRunner/__init__.py
+TaskRunner/main.py
+taskrunner/__init__.py
+taskrunner/__main__.py
+taskrunner/main.py
+taskrunner.egg-info/PKG-INFO
+taskrunner.egg-info/SOURCES.txt
+taskrunner.egg-info/dependency_links.txt
+taskrunner.egg-info/entry_points.txt
+taskrunner.egg-info/requires.txt
+taskrunner.egg-info/top_level.txt

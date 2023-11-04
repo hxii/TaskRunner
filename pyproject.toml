@@ -1,0 +1,10 @@
+[project]
+name = "taskrunner"
+version = "0.0.1"
+dependencies = [
+    "PyYAML",
+    "setuptools",
+    "termcolor"
+]
+[project.scripts]
+taskrunner='taskrunner.__main__:run'
