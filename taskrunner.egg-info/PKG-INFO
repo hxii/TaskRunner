@@ -1,6 +1,0 @@
-Metadata-Version: 2.1
-Name: taskrunner
-Version: 0.0.1
-Requires-Dist: PyYAML
-Requires-Dist: setuptools
-Requires-Dist: termcolor

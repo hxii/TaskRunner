@@ -3,8 +3,14 @@ name = "taskrunner"
 version = "0.0.1"
 dependencies = [
     "PyYAML",
-    "setuptools",
-    "termcolor"
+    "setuptools"
 ]
+[tool.buildsystem.entrypoints]
+taskrunner = "taskrunner.cli:run"
+
 [project.scripts]
-taskrunner='taskrunner.__main__:run'
+taskrunner = "taskrunner.cli:run"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

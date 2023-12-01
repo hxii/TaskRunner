@@ -1,0 +1,38 @@
+variables:
+    - brew_packages:
+        - awscli
+        - hdf5
+        - colima
+        - docker-buildx
+        - cmake
+        - libomp
+    - thing: |
+        This is just text tbh.
+        With a newline.
+helpers:
+    command_exists:
+        text: Check that a command exists
+        run: command -v {}
+        shell: True
+    python_312_not_available:
+        run: pyenv versions --skip-envs --skip-aliases | grep -q "3.12"
+        success: 1
+        shell: True
+tasks:
+    echo:
+        text: Let's see if this works.
+        require_input: "Enter a command: "
+    check:
+        run: ls -l variables.echo_input
+        check: tasks\.ya?ml
+    # pyenv_install312:
+    #     prerequisites: helpers.python_312_not_available
+    #     run: pyenv install 3.12
+    # pyenv_create_venv:
+    #     text: Now creating venv
+    #     run: pyenv virtualenv 3.12 test312
+    # install_brew_packages:
+    #     text: Install brew packages
+    #     prerequisites: helpers.command_exists(brewa)
+    #     each: variables.brew_packages
+    #     run: brew install {}
