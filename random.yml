@@ -6,6 +6,7 @@ variables:
         - docker-buildx
         - cmake
         - libomp
+        - thishouldfail
     - thing: |
         This is just text tbh.
         With a newline.
@@ -19,20 +20,16 @@ helpers:
         success: 1
         shell: True
 tasks:
-    echo:
-        text: Let's see if this works.
-        require_input: "Enter a command: "
-    check:
-        run: ls -l variables.echo_input
-        check: tasks\.ya?ml
-    # pyenv_install312:
-    #     prerequisites: helpers.python_312_not_available
-    #     run: pyenv install 3.12
-    # pyenv_create_venv:
-    #     text: Now creating venv
-    #     run: pyenv virtualenv 3.12 test312
-    # install_brew_packages:
-    #     text: Install brew packages
-    #     prerequisites: helpers.command_exists(brewa)
-    #     each: variables.brew_packages
-    #     run: brew install {}
+    checkenv:
+        cwd: ~/dev/analytics
+        prerequisites: helpers.command_exists(brew)
+        run: pwd
+    python_task:
+        text: |
+            We can run Python code as well, and check the output.
+            The python code is not parsed by TaskRunner, but we can use `python -c` to achieve this.
+
+            Before running this, we can run a helper to make sure we have access to Python, for example.
+        run: python -c "from pprint import pprint; pprint('This was printed by Python')"
+        prerequisites: helpers.command_exists(python) helpers.command_exists(brew)
+        show_output: True

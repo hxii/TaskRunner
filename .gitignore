@@ -1,1 +1,8 @@
 .DS_Store
+dist/*
+dist
+build/*
+build
+*egg-info*
+*.yml
+*.yaml

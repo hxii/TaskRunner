@@ -1,7 +1,4 @@
-from . import run
+from taskrunner.cli import run
 
-def main():
+if __name__ == "__main__":
     run()
-
-if __name__ == '__main__':
-    main()

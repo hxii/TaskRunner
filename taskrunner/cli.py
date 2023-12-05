@@ -1,11 +1,18 @@
 import argparse
 import logging
+from sys import version_info, version as python_version
+from taskrunner import __version__
 from .main import TaskRunner, logger
+
+assert version_info >= (3, 10), f"Python >= 3.10 required. You've got {python_version}"
 
 parser = argparse.ArgumentParser(
     prog="TaskRunner", description="Simple, sequential task runner"
 )
 
+parser.add_argument(
+    "-V", "--version", action="version", version=f"%(prog)s {__version__}"
+)
 parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output.")
 parser.add_argument(
     "-q", "--quiet", action="store_true", help="Do not output anything except errors."

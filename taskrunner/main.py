@@ -1,3 +1,4 @@
+from abc import ABC
 from dataclasses import dataclass, field, replace
 import os
 from pathlib import Path
@@ -5,7 +6,7 @@ import re
 import subprocess
 import sys
 from typing import List, Dict
-from importlib.metadata import version
+from taskrunner import __version__
 from datetime import datetime
 
 from collections import ChainMap
@@ -31,7 +32,6 @@ class color:
 
 
 class TaskRunner:
-
     _quiet: bool = False
     _dry_run: bool = False
     tasks: List["Task"] = []
@@ -123,7 +123,7 @@ class TaskRunner:
         if TaskRunner.quiet:
             logger.setLevel(logging.ERROR)
         logger.info(
-            f"{color.BOLD}{color.DARKCYAN}[TaskRunner {version(__package__)}]{color.END}"
+            f"{color.BOLD}{color.DARKCYAN}[TaskRunner {__version__}]{color.END}"
         )
         logger.info(f"Task File: {color.BOLD}{self.task_path.absolute()}{color.END}")
         if TaskRunner.dry_run:
@@ -145,7 +145,7 @@ class TaskRunner:
         logger.info(f"Ended: {color.BOLD}{datetime.today()}{color.END}")
 
 
-class Executable:
+class Executable(ABC):
     name: str
     text: str = ""
     run: str = ""
@@ -172,7 +172,9 @@ class Executable:
         """
         # FIXME - Add check for text only mode as well.
         if not TaskRunner.quiet and self.text:
-            logger.info(f"{color.UNDERLINE}{self.__class__.__name__} {self.name}{color.END} - {self.text}")
+            logger.info(
+                f"{color.UNDERLINE}{self.__class__.__name__} {self.name}{color.END} - {self.text}"
+            )
 
     def error(self, message: str = "", fatal: bool = False):
         """
@@ -231,6 +233,7 @@ class Task(Executable):
     user_input: str = ""
     """Store user input result from `require_input`."""
     on_failure: str = ""
+    on_success: str = ""
 
     def _run(self):
         self._orun()  # FIXME - Temporary

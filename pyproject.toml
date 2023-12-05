@@ -1,6 +1,9 @@
 [project]
 name = "taskrunner"
 version = "0.0.1"
+authors = [
+    {name = "Paul Glushak", email = "paul@glushak.net"}
+]
 dependencies = [
     "PyYAML",
     "setuptools"
