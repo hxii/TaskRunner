@@ -6,3 +6,5 @@ build
 *egg-info*
 *.yml
 *.yaml
+.vscode/*
+.vscode
