@@ -8,8 +8,27 @@ dependencies = [
     "PyYAML",
     "setuptools"
 ]
+
 [tool.buildsystem.entrypoints]
 taskrunner = "taskrunner.cli:run"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "A",  # prevent using keywords that clobber python builtins
+    "B",  # bugbear: security warnings
+    "E",  # pycodestyle
+    "F",  # pyflakes
+    "ISC",  # implicit string concatenation
+    "I", # isort
+    "UP",  # alert you when better syntax is available in your python version
+    "RUF",  # the ruff developer's own rules
+    "SIM", # flake8-simplify
+]
+ignore = ["RUF012","ISC001"]
 
 [project.scripts]
 taskrunner = "taskrunner.cli:run"
