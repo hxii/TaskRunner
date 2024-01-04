@@ -5,9 +5,7 @@ helpers:
     command_exists:
         text: Check that a command exists
         run: command -v {}
-        shell: True
     python_312_not_available:
         run: pyenv versions --skip-envs --skip-aliases | grep -q "3.12"
-        success: 1
-        shell: True
+        success_code: 1
 ```

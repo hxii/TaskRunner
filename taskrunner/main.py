@@ -96,8 +96,7 @@ class TaskRunner:
         TaskRunner.check_only = check_only
         task_path = Path(task_file)
         if not task_path.exists():
-            logger.error(f"{task_path} doesn't exist. Aborting!")
-            exit(1)
+            raise TaskRunnerException(f"{task_path} doesn't exist. Aborting!")
         self.task_path = task_path
 
     def _header_info(self, header: str, text: str) -> str:
@@ -157,8 +156,7 @@ class TaskRunner:
             exit(not valid)
         logger.info(f"{color.BOLD}YAML Valid:{color.END} {valid}")
         if not valid:
-            logger.error(message)
-            exit(1)
+            raise TaskRunnerException(message)
         if "information" in parsed_yaml:
             logger.info(f"{color.BOLD}Information:{color.END} {parsed_yaml['information'].strip()}")
         if "variables" in parsed_yaml:
@@ -209,7 +207,6 @@ class TaskRunner:
             _helper = copy(self.helpers[helper])
             _helper._args = _args.split()
             _helper.run = _helper.run.format(*_helper._args)
-            # logger.debug(_helper)
             _helper._execute_task()
 
     def _parse_prerequisites_in_task(self, prerequisites: str) -> list["Task"]:
@@ -226,12 +223,6 @@ class TaskRunner:
                     prerequisite_list[i]._args = _args.split()
                 except KeyError:
                     logger.error(f"Helper {helper} not found.")
-                # if _helper := self.helpers.get(helper):
-                #     new_helper = replace(_helper)
-                #     prerequisite_list[i] = new_helper
-                #     prerequisite_list[i]._args = _args.split()
-                # else:
-                # logger.error(f"Helper {helper} not found.")
         return prerequisite_list
 
     def run(self):
@@ -246,12 +237,6 @@ class TaskRunner:
         for index, task in enumerate(self.tasks, start=1):
             TaskRunner.current_task = index
             self._process_prerequisites(task.prerequisites)
-            # prerequisites = self._parse_prerequisites_in_task(task.prerequisites)
-            # for prerequsite in prerequisites:
-            #     prerequsite.run = prerequsite.run.format(*prerequsite._args)
-            #     if not isinstance(prerequsite, Helper):
-            #         continue
-            #     prerequsite._execute_task()
             task._execute_task()
         logger.info(f"{color.BOLD}Ended:{color.END} {datetime.today()}")
 
@@ -338,8 +323,7 @@ class Executable(ABC):
         path = self.parse_variables_in_str(self.working_dir)
         path = Path(path).expanduser()
         if not path.exists() and not path.is_dir():
-            logger.error(f"Working dir {self.working_dir} is not a valid directory!")
-            exit(1)
+            raise TaskRunnerException(f"Working dir {self.working_dir} is not a valid directory!")
         return path.absolute().as_posix()
 
     def _parse_env(self) -> None:
@@ -444,27 +428,13 @@ class Executable(ABC):
 
 @dataclass
 class Task(Executable):
-    # name: str
-    # description: str = ""
-    # run: list | str = ""
-    # """The command this task needs to run. `str` for shell, `list` for no shell."""
-    # commands: list = field(default_factory=list)
-    # each: str | list = field(default_factory=list)
     prerequisites: str = ""
-    # prerequisite_list: list = field(default_factory=list)
     check: str = ""
-    # success_code: int = 0
-    # working_dir: str = ""
-    # env: None | dict = None
     show_output: bool = False
     output: list = field(default_factory=list)
     # """Store the command's output."""
     require_input: str | bool = False
     # """The message we should show, in case input is required. Display default message if True."""
-    # user_input: str = ""
-    # """Store user input result from `require_input`."""
-    # on_failure: str | dict = None
-    # on_success: str | dict = None
 
     def _execute_task(self):
         self._parse_each()
@@ -490,24 +460,6 @@ class Task(Executable):
 
 @dataclass
 class Helper(Task):
-    # name: str
-    # description: str = ""
-    # run: list | str = ""
-    # """The command this task needs to run. `str` for shell, `list` for no shell."""
-    # commands: list = field(default_factory=list)
-    # check: str = ""
-    # success_code: int = 0
-    # working_dir: str = ""
-    # env: None | dict = None
-    # show_output: bool = False
-    # output: list = field(default_factory=list)
-    # """Store the command's output."""
-    # require_input: str | bool = False
-    # """The message we should show, in case input is required. Display default message if True."""
-    # user_input: str = ""
-    # """Store user input result from `require_input`."""
-    # on_failure: str = ""
-    # on_success: str = ""
     _args: list = field(default_factory=list)
 
 
@@ -549,3 +501,9 @@ class Command:
                 logger.debug(line)
         self.error = "\n".join(line.rstrip().decode() for line in proc.stderr.readlines())
         self.successful = self.return_code == proc.returncode
+
+class TaskRunnerException(Exception):
+    message: str
+    
+    def __init__(self, message = ""):
+        self.message = message

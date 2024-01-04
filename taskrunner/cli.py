@@ -6,7 +6,7 @@ from sys import version_info
 
 from taskrunner import __version__
 
-from .main import TaskRunner, logger
+from .main import TaskRunner, TaskRunnerException, logger, color
 
 assert version_info >= (3, 10), f"Python >= 3.10 required. You've got {python_version}"
 
@@ -35,10 +35,14 @@ if args.verbose:
 
 
 def run():
-    tr = TaskRunner(
-        args.taskfile, quiet=args.quiet, dry_run=args.dry_run, text_only=args.text_only, check_only=args.check_only
-    )
     try:
+        tr = TaskRunner(
+            args.taskfile, quiet=args.quiet, dry_run=args.dry_run, text_only=args.text_only, check_only=args.check_only
+        )
         tr.run()
     except KeyboardInterrupt:
         print("\n!!!\nABORTED BY USER\n!!!")
+    except TaskRunnerException as e:
+        message = f"{color.RED}[!]{color.END}{color.BOLD} TaskRunner Error: {e.message}"
+        print(message)
+        

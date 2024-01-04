@@ -1,5 +1,5 @@
 # Tasks
-A task can be define as simply as:
+A task can be defined as simply as:
 ```YAML
 tasks:
     my_task:
@@ -7,9 +7,9 @@ tasks:
 ```
 
 ## Options
-- `text`: The text a task should announce before it executes.
+- `description`: The text a task should announce before it executes.
 - `run`: The command a task should run. `shell=True` if a string is passed, `shell=False` if a list is passed.
-- `success`: The successful return code a task should anticipate. 0 by default.
+- `success_code`: The successful return code a task should anticipate. 0 by default.
 - `each`: Accepts a list (or variable of list) that the `run` command should iterate through.
 - `show_output`: Whether to display the output of the executed command.
 - `check`: A regex string that the output should be checked against.
@@ -17,3 +17,7 @@ tasks:
     If an input was provided, it can be retrieved from `variables`. For example, if a task is called `checkpy`, the input can be retrieved with `variables.checkpy_output`.
 - `cwd`: The working directory a task should be executed in.
 - `prerequisites`: (WIP) A string of `helpers` that should be checked prior to executing `run`.
+- `on_success`/`on_failure`:
+    - `message`: Display a message.
+    - `command`: Run a command.
+    - `skip_to`: DEACTIVATED. Skip to a different task.
