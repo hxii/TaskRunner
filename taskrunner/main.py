@@ -502,8 +502,9 @@ class Command:
         self.error = "\n".join(line.rstrip().decode() for line in proc.stderr.readlines())
         self.successful = self.return_code == proc.returncode
 
+
 class TaskRunnerException(Exception):
     message: str
-    
-    def __init__(self, message = ""):
+
+    def __init__(self, message=""):
         self.message = message

@@ -6,7 +6,7 @@ from sys import version_info
 
 from taskrunner import __version__
 
-from .main import TaskRunner, TaskRunnerException, logger, color
+from .main import TaskRunner, TaskRunnerException, color, logger
 
 assert version_info >= (3, 10), f"Python >= 3.10 required. You've got {python_version}"
 
@@ -45,4 +45,3 @@ def run():
     except TaskRunnerException as e:
         message = f"{color.RED}[!]{color.END}{color.BOLD} TaskRunner Error: {e.message}"
         print(message)
-        

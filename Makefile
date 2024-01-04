@@ -10,4 +10,5 @@ fix:
 	ruff format .
 
 build: install lint
-	python -m build --sdist --wheel
+	# python -m build --sdist --wheel
+	pyinstaller taskrunner.spec
